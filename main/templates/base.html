@@ -1,0 +1,403 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}NeuroVertex Academy{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+    <style>
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+        .content {
+            flex: 1;
+        }
+        .footer {
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: auto;
+        }
+        .chat-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            max-height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1050;
+        }
+        .chat-header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+        }
+        .chat-header button.close-btn {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        .chat-input-container {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+        .chat-message.bot.typing span {
+            font-style: italic;
+            opacity: 0.6;
+        }
+        .chat-suggestion {
+            background: #f0f0f0;
+            border: none;
+            margin: 5px 5px 0 0;
+            padding: 5px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .chat-suggestion:hover {
+            background: #e0e0e0;
+        }
+        .chat-input-container input[type="text"] {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+        .chat-input-container button {
+            background-color: #0d6efd;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .chat-message.user {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .chat-message.user span {
+            background-color: #0d6efd;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        .chat-message.bot {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .chat-message.bot span {
+            background-color: #e9ecef;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        #chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #0d6efd;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1050;
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- Navbar -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">NeuroVertex Academy</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'courses' %}">Courses</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'events' %}">Events</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#authModal">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#authModal">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Banner -->
+<section>
+    <img src="{% static 'images/banner.png' %}" alt="Academy Banner" class="img-fluid w-100" />
+</section>
+
+<!-- Main Content -->
+<main class="content container py-4">
+    {% block content %}{% endblock %}
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p class="mb-0">&copy; 2025 NeuroVertex Academy. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- Auth Modal -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="authModalLabel">Welcome!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="authTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab">Sign Up</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Login</button>
+                    </li>
+                </ul>
+                <div class="tab-content mt-3">
+                    <!-- Sign Up -->
+                    <div class="tab-pane fade show active" id="signup" role="tabpanel">
+                        <form method="POST" action="{% url 'register' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="signup-username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="signup-username" name="username" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="signup-email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="signup-email" name="email" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="signup-password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="signup-password" name="password" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                        </form>
+                    </div>
+                    <!-- Login -->
+                    <div class="tab-pane fade" id="login" role="tabpanel">
+                        <form method="POST" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="login-username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="login-username" name="username" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="login-password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="login-password" name="password" required />
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Chat Button -->
+<button id="chat-icon" onclick="toggleChat()">💬</button>
+
+<!-- Chatbot -->
+<div class="chat-container" id="chat-container">
+    <div class="chat-header">
+        NeuroVertex Chatbot
+        <button class="close-btn" onclick="toggleChat()">&times;</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-container">
+        <input type="text" id="chat-input" placeholder="Type your message..." onkeydown="if(event.key==='Enter'){sendMessage();}" />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<!-- Bootstrap & Script -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const chatIcon = document.getElementById('chat-icon');
+    const chatContainer = document.getElementById('chat-container');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+
+    function toggleChat() {
+        chatContainer.style.display = chatContainer.style.display === 'flex' ? 'none' : 'flex';
+        chatInput.focus();
+        if (chatMessages.innerHTML.trim() === '') {
+            appendMessage('bot', "Hi! I’m NeuroVertex Chatbot. Ask about our courses, fees, trainers, schedule, or more. Click below to begin:");
+            showSuggestions([
+                "Course details",
+                "Course fees",
+                "How to enroll",
+                "Available batches",
+                "Certification",
+                "Placement assistance",
+                "Refund policy",
+                "Contact support"
+            ]);
+        }
+    }
+
+    function appendMessage(sender, message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message', sender);
+
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+
+        messageDiv.appendChild(messageSpan);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showSuggestions(suggestions) {
+        document.querySelectorAll('.chat-suggestion').forEach(el => el.remove());
+        suggestions.forEach(suggestion => {
+            const button = document.createElement('button');
+            button.className = 'chat-suggestion';
+            button.textContent = suggestion;
+            button.onclick = () => {
+                appendMessage('user', suggestion);
+                sendMessage(suggestion);
+            };
+            chatMessages.appendChild(button);
+        });
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function simulateTyping(callback) {
+        const typing = document.createElement('div');
+        typing.className = 'chat-message bot typing';
+        typing.innerHTML = `<span>Typing...</span>`;
+        chatMessages.appendChild(typing);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() => {
+            typing.remove();
+            callback();
+        }, 700);
+    }
+
+    function sendMessage(userMsg) {
+        const message = userMsg || chatInput.value.trim();
+        if (!message) return;
+
+        if (!userMsg) {
+            appendMessage('user', message);
+            chatInput.value = '';
+        }
+
+        simulateTyping(() => {
+            const lower = message.toLowerCase();
+            let botResponse = "I'm sorry, I didn't get that. Try asking about courses, fees, schedule, or more.";
+            let suggestions = [
+                "Course details",
+                "Course fees",
+                "How to enroll",
+                "Available batches",
+                "Certification",
+                "Placement assistance",
+                "Refund policy",
+                "Contact support"
+            ];
+
+            if (["hi", "hello", "hey"].some(greet => lower.includes(greet))) {
+                botResponse = "Hello! How can I help you today?";
+            } else if (lower.includes("course details") || lower.includes("courses")) {
+                botResponse = "We offer AI, Data Science, Web Development, Python Basics, and more.";
+                suggestions = ["AI", "Data Science", "Web Development", "Python Basics", "Back"];
+            } else if (lower.includes("ai")) {
+                botResponse = "📘 AI Course: ML, NLP, CV, Deep Learning. Duration: 3 months. Online + Certification.";
+            } else if (lower.includes("data science")) {
+                botResponse = "📗 Data Science: Python, stats, ML, visualization. Duration: 4 months. Certification included.";
+            } else if (lower.includes("web development")) {
+                botResponse = "📙 Web Dev: HTML, CSS, JavaScript, Django, APIs. Duration: 3 months.";
+            } else if (lower.includes("python")) {
+                botResponse = "🐍 Python Basics: Syntax, loops, OOP. Ideal for beginners. Duration: 1.5 months.";
+            } else if (lower.includes("fee") || lower.includes("fees") || lower.includes("cost") || lower.includes("price")) {
+                botResponse = "💰 Course Fees:\nAI - ₹6000\nData Science - ₹6000\nWeb Development - ₹6000\nPython Basics - ₹6000.\n Installments available.";
+                suggestions = ["How to enroll", "Refund policy", "Available batches", "Back"];
+            } else if (lower.includes("enroll") || lower.includes("admission") || lower.includes("join")) {
+                botResponse = "📝 Enroll online via our website registration form. For help, reach out to our support team.";
+            } else if (lower.includes("batch") || lower.includes("schedule")) {
+                botResponse = "🗓️ Batches start monthly. Choose from weekday or weekend options.";
+            } else if (lower.includes("contact") || lower.includes("support")) {
+                botResponse = "📞 Contact: ajit74043@gmail.com or +91-8053856536.";
+            } else if (lower.includes("certification") || lower.includes("certificate")) {
+                botResponse = "🎓 Yes, we offer certification upon course completion.";
+            } else if (lower.includes("trainer") || lower.includes("instructor")) {
+                botResponse = "👨‍🏫 Our trainers are experienced professionals with 5+ years of industry expertise.";
+            } else if (lower.includes("placement") || lower.includes("job") || lower.includes("career")) {
+                botResponse = "💼 We offer placement support including mock interviews and resume reviews.";
+            } else if (lower.includes("internship")) {
+                botResponse = "🎯 Internships are available for top-performing students after course completion.";
+            } else if (lower.includes("refund")) {
+                botResponse = "💸 We offer a 7-day refund policy from the course start date.";
+            } else if (lower.includes("mode") || lower.includes("online") || lower.includes("offline")) {
+                botResponse = "🌐 All courses are conducted online via live sessions with recordings available.";
+            } else if (lower.includes("duration")) {
+                botResponse = "🕒 Duration: AI - 3 months, Data Science - 3 months, Web Dev - 3 months, Python - 1.5 months.";
+            } else if (lower === "back") {
+                botResponse = "What else would you like to know?";
+            } else if (lower.includes("thank")) {
+                botResponse = "You're welcome! 😊 Let me know if there's anything else.";
+            }
+
+            appendMessage('bot', botResponse);
+            showSuggestions(suggestions);
+        });
+    }
+</script>

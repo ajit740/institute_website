@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Join the Elite - Regret Later 😏{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4 rounded-3">
+                <h2 class="text-center mb-4 text-primary">Welcome to the Dark Side 😎</h2>
+                <p class="text-center text-muted mb-4">(Sign up now, and wonder why you did it later.)</p>
+                
+                <form method="POST" id="registerForm">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Pick a legendary username" required>
+                        <small class="text-danger" id="usernameError"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Enter an email that actually exists" required>
+                        <small class="text-danger" id="emailError"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Make it as strong as your willpower" required>
+                        <small class="text-danger" id="passwordError"></small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">
+                        Sign Up & Enter the Chaos 🚀
+                    </button>
+                </form>
+
+                <div class="mt-3">
+                    {% for message in messages %}
+                        <p class="alert alert-info">{{ message }}</p>
+                    {% endfor %}
+                </div>
+
+                <p class="mt-3 text-center">Already got a regret-worthy account?  
+                    <a href="{% url 'login' %}" class="fw-bold text-decoration-none">Login Here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        let valid = true;
+        let username = document.getElementById("username").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let password = document.getElementById("password").value.trim();
+
+        // Clear previous error messages
+        document.getElementById("usernameError").innerText = "";
+        document.getElementById("emailError").innerText = "";
+        document.getElementById("passwordError").innerText = "";
+
+        // Validation checks
+        if (username.length < 4) {
+            document.getElementById("usernameError").innerText = "Come on, be more creative. At least 4 characters!";
+            valid = false;
+        }
+
+        if (!email.includes("@") || !email.includes(".")) {
+            document.getElementById("emailError").innerText = "That doesn’t look like an email. Try again.";
+            valid = false;
+        }
+
+        if (password.length < 6) {
+            document.getElementById("passwordError").innerText = "Weak passwords get hacked. At least 6 characters!";
+            valid = false;
+        }
+
+        if (!valid) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+<!-- Additional Styling -->l.
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.2s ease;
+    }
+    .card:hover {
+        transform: scale(1.02);
+    }
+    .btn {
+        border-radius: 10px;
+    }
+</style>
+
+{% endblock %}

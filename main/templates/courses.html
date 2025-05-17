@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Courses - NeuroVertex Academy{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center fw-bold">Explore Our Career-Focused Courses 📚</h2>
+    <p class="text-muted text-center">
+        Gain industry-relevant skills, work on live projects, and earn a professional certification.  
+        Kickstart your career with expert-led training! 🚀
+    </p>
+
+    <div class="row">
+        <!-- AI & Data Science -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg p-3 course-card">
+                <img src="{% static 'images/ai.png' %}" class="card-img-top" alt="AI & Data Science Course">
+                <div class="card-body">
+                    <h5 class="card-title">AI & Data Science</h5>
+                    <p><strong>Duration:</strong> 3 Months | <strong>Fee:</strong> ₹6,000</p>
+                    <button class="btn btn-primary enroll-btn w-100" data-course="AI & Data Science">Enroll Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frontend Development -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg p-3 course-card">
+                <img src="{% static 'images/front end.png' %}" class="card-img-top" alt="Frontend Development Course">
+                <div class="card-body">
+                    <h5 class="card-title">Frontend Development</h5>
+                    <p><strong>Duration:</strong> 3 Months | <strong>Fee:</strong> ₹6,000</p>
+                    <button class="btn btn-primary enroll-btn w-100" data-course="Frontend Development">Enroll Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Python Programming -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg p-3 course-card">
+                <img src="{% static 'images/python.png' %}" class="card-img-top" alt="Python Programming Course">
+                <div class="card-body">
+                    <h5 class="card-title">Python Programming</h5>
+                    <p><strong>Duration:</strong> 3 Months | <strong>Fee:</strong> ₹6,000</p>
+                    <button class="btn btn-primary enroll-btn w-100" data-course="Python Programming">Enroll Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cyber Security -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg p-3 course-card">
+                <img src="{% static 'images/cs.png' %}" class="card-img-top" alt="Cyber Security Course">
+                <div class="card-body">
+                    <h5 class="card-title">Cyber Security</h5>
+                    <p><strong>Duration:</strong> 3 Months | <strong>Fee:</strong> ₹6,000</p>
+                    <button class="btn btn-primary enroll-btn w-100" data-course="Cyber Security">Enroll Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Web Development -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg p-3 course-card">
+                <img src="{% static 'images/Web.png' %}" class="card-img-top" alt="Web Development Course">
+                <div class="card-body">
+                    <h5 class="card-title">Web Development</h5>
+                    <p><strong>Duration:</strong> 3 Months | <strong>Fee:</strong> ₹6,000</p>
+                    <button class="btn btn-primary enroll-btn w-100" data-course="Web Development">Enroll Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Analysis -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg p-3 course-card">
+                <img src="{% static 'images/DA.png' %}" class="card-img-top" alt="Data Analysis Course">
+                <div class="card-body">
+                    <h5 class="card-title">Data Analysis</h5>
+                    <p><strong>Duration:</strong> 3 Months | <strong>Fee:</strong> ₹6,000</p>
+                    <button class="btn btn-primary enroll-btn w-100" data-course="Data Analysis">Enroll Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enrollment Modal -->
+<div class="modal fade" id="enrollModal" tabindex="-1" aria-labelledby="enrollModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enroll in <span id="courseName"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="enrollForm" method="POST" action="{% url 'enroll' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="course" id="courseInput">
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit Enrollment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const enrollButtons = document.querySelectorAll(".enroll-btn");
+
+        enrollButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const isAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
+
+                if (!isAuthenticated) {
+                    window.location.href = "{% url 'login' %}?next={{ request.path }}";
+                    return;
+                }
+
+                const courseName = this.getAttribute("data-course");
+                const enrollModal = new bootstrap.Modal(document.getElementById("enrollModal"));
+
+                document.getElementById("courseName").innerText = courseName;
+                document.getElementById("courseInput").value = courseName;
+
+                enrollModal.show();
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+
+

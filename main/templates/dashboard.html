@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - NeuroVertex Academy{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+
+        <!-- Profile Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <img src="{% static 'images/default-avatar.png' %}" class="rounded-circle mb-3" width="100" alt="Profile Picture of {{ user.first_name }} {{ user.last_name }}">
+                    <h4 class="card-title">{{ user.first_name }} {{ user.last_name }}</h4>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <p class="text-muted"><small>Joined: {{ user.date_joined|date:"F d, Y" }}</small></p>
+                    <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Courses Section -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">My Courses 📚</h4>
+                    {% if enrolled_courses %}
+                        <ul class="list-group">
+                            {% for course in enrolled_courses %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ course.name }}
+                                    <a href="{% url 'course_detail' course.id %}" class="badge bg-primary text-white">View Course</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">You haven't enrolled in any courses yet.</p>
+                        <a href="{% url 'courses' %}" class="btn btn-success btn-sm">Explore Courses</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Quick Links Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Quick Links 🔗</h4>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{% url 'courses' %}" class="btn btn-outline-primary btn-sm"><i class="fas fa-book"></i> Browse Courses</a>
+                        <a href="{% url 'events' %}" class="btn btn-outline-info btn-sm"><i class="fas fa-calendar"></i> Upcoming Events</a>
+                        <a href="{% url 'contact' %}" class="btn btn-outline-success btn-sm"><i class="fas fa-envelope"></i> Contact Support</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Recent Activity 🕒</h4>
+                    <p class="text-muted">Feature coming soon...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'logout' %}" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+</div>
+
+<!-- Additional Styling -->
+<style>
+    .shadow-sm {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .rounded-circle {
+        border: 3px solid #ddd;
+    }
+    .btn {
+        border-radius: 5px;
+    }
+    .list-group-item {
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+</style>
+
+{% endblock %}

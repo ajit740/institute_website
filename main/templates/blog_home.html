@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Home</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJv3X0X3zwJfM6SHmFQ24d5+0rCZB6Z5ISwGVzNfX4g4Jh9bhp0m9lwN98p4" crossorigin="anonymous">
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+        .navbar {
+            background-color: #1e2a3a;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: #ffffff !important;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #1abc9c !important;
+        }
+        .hero-section {
+            background-color: #1e2a3a;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            border-bottom: 2px solid #1abc9c;
+        }
+        .btn-back {
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+            text-decoration: none;
+        }
+        .btn-back:hover {
+            background-color: #16a085;
+        }
+        .blog-posts {
+            margin-top: 60px;
+        }
+        .post-card {
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Image Styling */
+        .post-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            object-position: center center;
+            transition: transform 0.3s ease;
+        }
+
+        .post-card img:hover {
+            transform: scale(1.05);
+        }
+
+        .post-card-body {
+            padding: 20px;
+        }
+        .post-card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .post-card-text {
+            font-size: 1rem;
+            color: #7f8c8d;
+        }
+        .card-footer {
+            background-color: #ecf0f1;
+            border-top: 1px solid #ddd;
+            text-align: right;
+        }
+        .card-footer .btn {
+            background-color: #1abc9c;
+            color: white;
+            padding: 8px 20px;
+            font-size: 14px;
+            border-radius: 20px;
+            border: none;
+        }
+        .card-footer .btn:hover {
+            background-color: #16a085;
+        }
+
+        /* Media Query for Smaller Screens */
+        @media (max-width: 767px) {
+            .post-card {
+                margin-bottom: 20px;
+            }
+            .post-card img {
+                height: 180px; /* Slightly adjust height for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar (Optional) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Institute Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'courses' %}">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'events' %}">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'news' %}">News</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4">Welcome to the Blog Home</h1>
+            <p class="lead">Stay informed with the latest insights, trends, and updates in technology and education.</p>
+            <a href="{% url 'home' %}" class="btn-back">← Back to Home</a>
+        </div>
+    </section>
+
+    <!-- Blog Posts Section -->
+    <div class="container blog-posts">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="post-card">
+                    <img src="{% static 'images/blog-ai.webp' %}" class="card-img-top" alt="AI Blog">
+                    <div class="post-card-body">
+                        <h5 class="post-card-title">The Future of AI in 2025</h5>
+                        <p class="post-card-text">Explore the possibilities and challenges AI will present in the next few years.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="post-card">
+                    <img src="{% static 'images/blog-fullstack.webp' %}" class="card-img-top" alt="Full Stack Blog">
+                    <div class="post-card-body">
+                        <h5 class="post-card-title">Full Stack Development: A Guide</h5>
+                        <p class="post-card-text">Learn the essentials of becoming a proficient full-stack developer.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="post-card">
+                    <img src="{% static 'images/blog-cybersecurity.webp' %}" class="card-img-top" alt="Cybersecurity Blog">
+                    <div class="post-card-body">
+                        <h5 class="post-card-title">Cybersecurity: Best Practices</h5>
+                        <p class="post-card-text">Learn how to secure your digital presence and protect against cyber threats.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Custom JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

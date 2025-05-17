@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 bg-dark text-white text-center">
+    <div class="container">
+        <h1 class="display-4">Cybersecurity Essentials for Students</h1>
+        <p class="lead">Learn how to stay secure online and build a strong foundation in cybersecurity from an early stage.</p>
+    </div>
+</section>
+
+<!-- Blog Content Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+
+                <img src="{% static 'images/blog-cybersecurity.jpg' %}" alt="Cybersecurity for Students" class="img-fluid rounded mb-4">
+                <p class="text-muted">Published on May 13, 2025</p>
+
+                <p>In our hyper-connected digital world, cybersecurity is not just an IT issue—it’s everyone’s responsibility. Students, often digital natives, are particularly vulnerable due to a lack of awareness and training. Understanding basic cybersecurity principles is crucial for protecting personal information and preparing for tech careers.</p>
+
+                <h3>1. Password Hygiene</h3>
+                <p>Use strong, unique passwords and avoid reusing the same one across platforms. A password manager can help you keep track safely.</p>
+
+                <h3>2. Recognizing Phishing Attempts</h3>
+                <p>Learn to identify suspicious emails or messages asking for personal info. Never click unknown links or attachments.</p>
+
+                <h3>3. Safe Social Media Practices</h3>
+                <p>Be mindful of what you share online—especially personal details like location, school, or phone numbers that hackers can exploit.</p>
+
+                <h3>4. Using Secure Networks</h3>
+                <p>Avoid logging into sensitive accounts over public Wi-Fi. Use VPNs and HTTPS sites for added protection.</p>
+
+                <h3>5. Staying Updated</h3>
+                <p>Ensure your devices, apps, and antivirus software are always updated to prevent vulnerabilities from being exploited.</p>
+
+                <h4>Conclusion</h4>
+                <p>Cybersecurity awareness is no longer optional. As a student, cultivating safe digital habits today will protect you from threats and open doors to future opportunities in the cybersecurity domain.</p>
+
+                <div class="text-center mt-5">
+                    <a href="{% url 'blog_home' %}" class="btn btn-primary">← Back to Blog</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
