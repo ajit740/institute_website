@@ -1,32 +1,21 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
+# Environment config to reduce logs and disable bytecode writing
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y curl build-essential libpq-dev gcc \
-    && curl https://sh.rustup.rs -sSf | sh -s -- -y \
-    && . "$HOME/.cargo/env"
-
-# Add Rust to PATH
-ENV PATH="/root/.cargo/bin:$PATH"
-
-# Set working directory
 WORKDIR /app
 
-# Copy only requirements first to leverage Docker cache
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Install Python dependencies
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
-
-# Now copy the full application code
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
-# Expose the port
-EXPOSE 8000
-
-# Run the server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Run the Django app with Gunicorn
+CMD ["gunicorn", "wsgi:application", "--bind", "0.0.0.0:8000"]
